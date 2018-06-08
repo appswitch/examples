@@ -1,0 +1,23 @@
+#
+# AppSwitch docker-compose file.
+#
+# daemon service:
+#  docker-compose up -d appswitch
+
+version: '2.3'
+
+volumes:
+  appswitch_logs:
+
+services:
+  appswitch:
+    image: appswitch/ax
+    pid: "host"
+    network_mode: "host"
+    privileged: true
+    volumes:
+      - /usr/bin:/usr/bin
+      - /var/run/appswitch:/var/run/appswitch
+      - appswitch_logs:/var/log
+    env_file:
+      - ${AX_CONFIG_FILE:-ax.config}
