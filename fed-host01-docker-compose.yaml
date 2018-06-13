@@ -1,0 +1,28 @@
+#
+# AppSwitch multi-node docker-compose file.
+#
+
+version: '2.3'
+
+volumes:
+  appswitch_logs:
+
+services:
+  appswitch:
+    image: appswitch/ax
+    pid: "host"
+    network_mode: "host"
+    privileged: true
+    volumes:
+      - /usr/bin:/usr/bin
+      - /dev:/dev
+      - /var/run/appswitch:/var/run/appswitch
+      - appswitch_logs:/var/log
+    environment:
+      - AX_DRIVER=user
+      - AX_NODE_INTERFACE=192.168.0.11
+      - AX_NEIGHBORS=192.168.0.10,192.168.0.11
+      - AX_CLUSTER=cluster0
+      - AX_FEDERATION_GATEWAY_IP=
+      - AX_FEDERATION_GATEWAY_NEIGHBORS=
+      - AX_OPTS=--clean
