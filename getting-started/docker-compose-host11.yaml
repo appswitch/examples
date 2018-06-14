@@ -14,8 +14,7 @@ services:
     network_mode: "host"
     privileged: true
     volumes:
-      - /usr/bin:/usr/bin
-      - /dev:/dev
+      - /usr/bin:/hostbin
       - /var/run/appswitch:/var/run/appswitch
       - appswitch_logs:/var/log
     environment:
