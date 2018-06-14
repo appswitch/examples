@@ -12,20 +12,11 @@ $script = <<-SCRIPT
 yum check-update
 yum install -y iperf3 net-tools nmap-ncat vim
 
-# Install docker
-#
-curl -fsSL https://get.docker.com/ | sh
-systemctl enable docker
-systemctl start docker
-usermod -aG docker vagrant
-
 # Install docker-compose
-#
 curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Stop and disable firewall
-#
 systemctl stop firewalld
 systemctl disable firewalld
 
@@ -35,14 +26,17 @@ SCRIPT
 Vagrant.configure(2) do |config|
   config.vm.box = "CentosBox/Centos7-v7.3-Minimal"
   config.vm.synced_folder ".", "/home/vagrant/appswitch"
-
   config.ssh.pty = true
+
   # Use the same key for each machine.
   config.ssh.insert_key = false
 
-  config.vm.provision "shell", inline: $script, privileged: true
+  # Install docker and pull ax image
+  config.vm.provision "docker", images: ["appswitch/ax"]
 
-  #
+  # Install docker-compose etc.
+  config.vm.provision "shell", inline: $script, privileged: true
+  
   # Naming convention: hostXY
   #  X: cluster number
   #  Y: node number
@@ -58,7 +52,7 @@ Vagrant.configure(2) do |config|
   nclusters.times do |clustern|
     nnodes.times do |noden|
       name = "host#{clustern}#{noden}"
-      config.vm.define name do |node|
+      config.vm.define name, autostart: false do |node|
         node.vm.hostname = name
         node.vm.network "private_network", ip: "192.168.#{clustern}.#{noden+10}",  virtualbox__intnet: true
 
