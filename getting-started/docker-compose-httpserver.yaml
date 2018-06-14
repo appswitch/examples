@@ -1,0 +1,11 @@
+version: '2.3'
+
+services:
+  httpserver:
+    image: python:alpine
+    entrypoint: /usr/bin/ax run --ip 1.1.1.1 --expose 8000:0.0.0.0:10000
+    command: python -m http.server
+    networks: []
+    volumes:
+      - /usr/bin:/usr/bin
+      - /var/run/appswitch:/var/run/appswitch

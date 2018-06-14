@@ -1,7 +1,6 @@
 #
-# AppSwitch multi-node docker-compose file.
+# AppSwitch Daemon docker-compose file for cluster0, host01
 #
-#  docker-compose --file ~/appswitch/`hostname`-docker-compose.yaml up -d
 
 version: '2.3'
 
@@ -21,9 +20,9 @@ services:
       - appswitch_logs:/var/log
     environment:
       - AX_DRIVER=user
-      - AX_NODE_INTERFACE=10.0.0.11
-      - AX_NEIGHBORS=10.0.0.10,10.0.0.11
-      - AX_CLUSTER=
+      - AX_NODE_INTERFACE=192.168.0.11
+      - AX_NEIGHBORS=192.168.0.10,192.168.0.11
+      - AX_CLUSTER=cluster0
       - AX_FEDERATION_GATEWAY_IP=
       - AX_FEDERATION_GATEWAY_NEIGHBORS=
       - AX_OPTS=--clean

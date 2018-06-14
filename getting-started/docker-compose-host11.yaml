@@ -1,7 +1,6 @@
 #
-# AppSwitch multi-node docker-compose file.
+# AppSwitch Daemon docker-compose file for cluster1, host11
 #
-#  docker-compose --file ~/appswitch/`hostname`-docker-compose.yaml up -d
 
 version: '2.3'
 
