@@ -7,5 +7,6 @@ services:
     command: python -m http.server
     networks: []
     volumes:
-      - /usr/bin:/usr/bin
-      - /var/run/appswitch:/var/run/appswitch
+      - /usr/bin/ax:/usr/bin/ax # AppSwitch binary
+      - /var/run/appswitch:/var/run/appswitch # AppSwitch UNIX socket
+      - /var/run/appswitch/appswitch-resolv.conf:/etc/resolv.conf # Use AppSwitch DNS server
