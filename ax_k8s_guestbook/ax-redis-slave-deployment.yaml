@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: redis-slave
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+        role: slave
+        tier: backend
+    spec:
+      containers:
+      - args:
+        - run
+        - --name=redis-slave
+        - --new-netns=false
+        - /entrypoint.sh
+        - /bin/sh
+        - -c
+        - /run.sh
+        command:
+        - /usr/bin/ax
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: gcr.io/google_samples/gb-redisslave:v1
+        name: slave
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /usr/bin/ax
+          name: ax-vol1
+        - mountPath: /var/run/appswitch
+          name: ax-vol2
+      volumes:
+      - hostPath:
+          path: /usr/bin/ax
+        name: ax-vol1
+      - hostPath:
+          path: /var/run/appswitch
+        name: ax-vol2
+status: {}
+---
+
+---
