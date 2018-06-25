@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: frontend
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containers:
+      - args:
+        - run
+        - --name=frontend
+        - --expose=80:43000
+        - --new-netns=false
+        - apache2-foreground
+        command:
+        - /usr/bin/ax
+        env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: gcr.io/google-samples/gb-frontend:v4
+        name: php-redis
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /usr/bin/ax
+          name: ax-vol1
+        - mountPath: /var/run/appswitch
+          name: ax-vol2
+      volumes:
+      - hostPath:
+          path: /usr/bin/ax
+        name: ax-vol1
+      - hostPath:
+          path: /var/run/appswitch
+        name: ax-vol2
+status: {}
+---

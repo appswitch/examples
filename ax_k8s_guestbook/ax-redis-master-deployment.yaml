@@ -1,0 +1,51 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  name: redis-master
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: redis
+        role: master
+        tier: backend
+    spec:
+      containers:
+      - args:
+        - run
+        - --name=redis-master
+        - --new-netns=false
+        - redis-server
+        - /etc/redis/redis.conf
+        command:
+        - /usr/bin/ax
+        image: k8s.gcr.io/redis:e2e
+        name: master
+        ports:
+        - containerPort: 6379
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /usr/bin/ax
+          name: ax-vol1
+        - mountPath: /var/run/appswitch
+          name: ax-vol2
+      volumes:
+      - hostPath:
+          path: /usr/bin/ax
+        name: ax-vol1
+      - hostPath:
+          path: /var/run/appswitch
+        name: ax-vol2
+status: {}
+---
+
+---
